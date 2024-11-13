@@ -36,7 +36,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "dev.solobit.bmi_calculator"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -58,19 +58,19 @@ android {
         versionName = flutter.versionName
     }
 
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-    }
+    // signingConfigs {
+    //     release {
+    //         keyAlias keystoreProperties['keyAlias']
+    //         keyPassword keystoreProperties['keyPassword']
+    //         storeFile file(keystoreProperties['storeFile'])
+    //         storePassword keystoreProperties['storePassword']
+    //     }
+    // }
 
     buildTypes {
         release {
-            // signingConfig = signingConfigs.debug
-            signingConfig = signingConfigs.release
+            signingConfig = signingConfigs.debug
+            // signingConfig = signingConfigs.release
         }
     }
     
