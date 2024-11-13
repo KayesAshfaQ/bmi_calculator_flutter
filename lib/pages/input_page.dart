@@ -162,6 +162,18 @@ class _InputPageState extends State<InputPage> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxWidth > 600) {
+          return _buildLandscapeLayout();
+        } else {
+          return _buildPortraitLayout();
+        }
+      },
+    );
+  }
+
+  Widget _buildPortraitLayout() {
     return Scaffold(
       appBar: AppBar(
         title: const Text('BMI Calculator'),
@@ -183,7 +195,6 @@ class _InputPageState extends State<InputPage> {
           )
         ],
       ),
-      // endDrawer: const DrawerWidget(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -191,37 +202,15 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: Builder(builder: (context) {
-                    bool isSelected = Gender.MALE == selectedGender;
-
-                    return ReusableCard(
-                      cardChild: const IconWidget(icon: Icons.male, label: 'MALE'),
-                      color: isSelected ? kColorActiveCard : kColorInActiveCard,
-                      border: isSelected ? Border.all(color: kColorBottomContainer, width: 2.0) : null,
-                      onPress: () {
-                        setState(() {
-                          selectedGender = Gender.MALE;
-                        });
-                      },
-                    );
-                  }),
+                  child: genderCard(
+                    gender: Gender.MALE,
+                    icon: Icons.male,
+                  ),
                 ),
                 Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      bool isSelected = Gender.FEMALE == selectedGender;
-
-                      return ReusableCard(
-                        color: isSelected ? kColorActiveCard : kColorInActiveCard,
-                        cardChild: const IconWidget(icon: Icons.female, label: 'FEMALE'),
-                        border: isSelected ? Border.all(color: kColorBottomContainer, width: 2.0) : null,
-                        onPress: () {
-                          setState(() {
-                            selectedGender = Gender.FEMALE;
-                          });
-                        },
-                      );
-                    },
+                  child: genderCard(
+                    gender: Gender.FEMALE,
+                    icon: Icons.female,
                   ),
                 ),
               ],
@@ -354,6 +343,73 @@ class _InputPageState extends State<InputPage> {
               );
             },
           )
+        ],
+      ),
+    );
+  }
+
+  Builder genderCard({
+    required Gender gender,
+    required IconData icon,
+  }) {
+    return Builder(builder: (context) {
+      bool isSelected = gender == selectedGender;
+
+      return ReusableCard(
+        cardChild: IconWidget(icon: icon, label: gender.toString().toUpperCase()),
+        color: isSelected ? kColorActiveCard : kColorInActiveCard,
+        border: isSelected ? Border.all(color: kColorBottomContainer, width: 2.0) : null,
+        onPress: () {
+          setState(() {
+            selectedGender = gender;
+          });
+        },
+      );
+    });
+  }
+
+  Widget _buildLandscapeLayout() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('BMI Calculator'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Settings',
+            // pass data to settings page using arguments
+            onPressed: () {
+              AppHelper.pushWithAnimation<void>(
+                context,
+                SettingsPage(
+                  selectedImperial: selectedImperial,
+                  selectedMetric: selectedMetric,
+                  onSettingsChanged: _onSettingsChange,
+                ),
+              );
+            },
+          )
+        ],
+      ),
+      // endDrawer: const DrawerWidget(),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Add your widgets here for the left side of the landscape layout
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Add your widgets here for the right side of the landscape layout
+              ],
+            ),
+          ),
         ],
       ),
     );
