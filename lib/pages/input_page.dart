@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bmi_calculator/utils/app_extensions.dart';
 
@@ -202,13 +203,13 @@ class _InputPageState extends State<InputPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: genderCard(
+                  child: _genderCard(
                     gender: Gender.MALE,
                     icon: Icons.male,
                   ),
                 ),
                 Expanded(
-                  child: genderCard(
+                  child: _genderCard(
                     gender: Gender.FEMALE,
                     icon: Icons.female,
                   ),
@@ -217,138 +218,122 @@ class _InputPageState extends State<InputPage> {
             ),
           ),
           Expanded(
-            child: ReusableCard(
-              color: kContainerColor,
-              cardChild: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('HEIGHT', style: kTextStyleLabel),
-                  selectedImperial == Imperial.cm
-                      ? Row(
-                          textBaseline: TextBaseline.alphabetic,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          children: [
-                            Text(height.toString(), style: kTextStyleNumber),
-                            Text(selectedImperial.value, style: kTextStyleLabel),
-                          ],
-                        )
-                      : Row(
-                          textBaseline: TextBaseline.alphabetic,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          children: [
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              transitionBuilder: (child, animation) => FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              ),
-                              child: Text(
-                                (height / 12).floor().toString(),
-                                key: ValueKey<int>((height / 12).floor()),
-                                style: kTextStyleNumber,
-                              ),
-                            ),
-                            const Text('ft', style: kTextStyleLabel),
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              transitionBuilder: (child, animation) => FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              ),
-                              child: Text(
-                                (height % 12).toString(),
-                                key: ValueKey<int>((height % 12).floor()),
-                                style: kTextStyleNumber,
-                              ),
-                            ),
-                            const Text('in', style: kTextStyleLabel),
-                          ],
-                        ),
-                  SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      trackHeight: 2.0,
-                      activeTrackColor: Colors.white,
-                      inactiveTrackColor: kColorLightGrey,
-                      thumbColor: kColorBottomContainer,
-                      overlayColor: const Color(0x29FF0067),
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                      overlayShape: const RoundSliderOverlayShape(overlayRadius: 24.0),
-                      trackShape: const RectangularSliderTrackShape(),
-                    ),
-                    child: selectedImperial == Imperial.cm
-                        ? Slider(
-                            value: height.toDouble(),
-                            min: 30,
-                            max: 340,
-                            onChanged: (double newValue) {
-                              setState(() {
-                                height = newValue.round();
-                              });
-                            },
-                          )
-                        : Slider(
-                            value: height.toDouble(),
-                            min: 12.0,
-                            max: 120.0,
-                            onChanged: (double newValue) {
-                              setState(() {
-                                height = newValue.round();
-                              });
-                            },
-                          ),
-                  )
-                ],
-              ),
-            ),
+            child: _heightCard(),
           ),
           Expanded(
             child: Row(
               children: [
                 Expanded(
-                  child: ReusableCard(
-                    color: kContainerColor,
-                    cardChild: weightColumn(),
-                  ),
+                  child: _weightCard(),
                 ),
                 Expanded(
-                  child: ReusableCard(
-                    color: kContainerColor,
-                    cardChild: ageColumn(),
-                  ),
+                  child: _ageCard(),
                 ),
               ],
             ),
           ),
-          BottomButtonWidget(
-            label: 'CALCULATE',
-            suffixIcon: FontAwesomeIcons.arrowRight,
-            onTap: () {
-              CalculatorController calculator = CalculatorController(
-                height: height,
-                weight: weight,
-                imperialUnit: selectedImperial,
-                metricUnit: selectedMetric,
-              );
-
-              AppHelper.pushWithAnimation(
-                context,
-                ResultPage(
-                  bmiResult: calculator.calculateBMI(),
-                  resultText: calculator.getResult(),
-                  interpolation: calculator.getInterpretation(),
-                ),
-                isTransitionVertical: true,
-              );
-            },
-          )
+          _calculateButton()
         ],
       ),
     );
   }
 
-  Builder genderCard({
+  Widget _calculateButton({bool isLandscape = false}) {
+    return BottomButtonWidget(
+      label: 'CALCULATE',
+      suffixIcon: FontAwesomeIcons.arrowRight,
+      onTap: () {
+        CalculatorController calculator = CalculatorController(
+          height: height,
+          weight: weight,
+          imperialUnit: selectedImperial,
+          metricUnit: selectedMetric,
+        );
+
+        AppHelper.pushWithAnimation(
+          context,
+          ResultPage(
+            bmiResult: calculator.calculateBMI(),
+            resultText: calculator.getResult(),
+            interpolation: calculator.getInterpretation(),
+          ),
+          isTransitionVertical: true,
+        );
+      },
+    );
+  }
+
+  Widget _buildLandscapeLayout() {
+    return Scaffold(
+      body: SafeArea(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // ----------------- app bar -----------------
+            RotatedBox(
+              quarterTurns: 3,
+              child: AppBar(
+                title: const Text('BMI Calculator'),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    tooltip: 'Settings',
+                    // pass data to settings page using arguments
+                    onPressed: () {
+                      AppHelper.pushWithAnimation<void>(
+                        context,
+                        SettingsPage(
+                          selectedImperial: selectedImperial,
+                          selectedMetric: selectedMetric,
+                          onSettingsChanged: _onSettingsChange,
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _genderCard(gender: Gender.MALE, icon: Icons.male),
+                  ),
+                  Expanded(
+                    child: _genderCard(gender: Gender.FEMALE, icon: Icons.female),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: _heightCard(isLandscape: true),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _weightCard(
+                      isLandScape: true,
+                    ),
+                  ),
+                  Expanded(child: _ageCard(isLandScape: true)),
+                ],
+              ),
+            ),
+            // ----------------- bottom button -----------------
+            RotatedBox(
+              quarterTurns: 3,
+              child: _calculateButton(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Builder _genderCard({
     required Gender gender,
     required IconData icon,
   }) {
@@ -356,7 +341,7 @@ class _InputPageState extends State<InputPage> {
       bool isSelected = gender == selectedGender;
 
       return ReusableCard(
-        cardChild: IconWidget(icon: icon, label: gender.toString().toUpperCase()),
+        cardChild: IconWidget(icon: icon, label: gender.value.toUpperCase()),
         color: isSelected ? kColorActiveCard : kColorInActiveCard,
         border: isSelected ? Border.all(color: kColorBottomContainer, width: 2.0) : null,
         onPress: () {
@@ -368,79 +353,134 @@ class _InputPageState extends State<InputPage> {
     });
   }
 
-  Widget _buildLandscapeLayout() {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('BMI Calculator'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Settings',
-            // pass data to settings page using arguments
-            onPressed: () {
-              AppHelper.pushWithAnimation<void>(
-                context,
-                SettingsPage(
-                  selectedImperial: selectedImperial,
-                  selectedMetric: selectedMetric,
-                  onSettingsChanged: _onSettingsChange,
+  Widget _heightCard({
+    bool isLandscape = false,
+  }) {
+    final slider = SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        trackHeight: 2.0,
+        activeTrackColor: Colors.white,
+        inactiveTrackColor: kColorLightGrey,
+        thumbColor: kColorBottomContainer,
+        overlayColor: const Color(0x29FF0067),
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
+        overlayShape: const RoundSliderOverlayShape(overlayRadius: 24.0),
+        trackShape: const RectangularSliderTrackShape(),
+      ),
+      child: selectedImperial == Imperial.cm
+          ? RotatedBox(
+              quarterTurns: isLandscape ? 3 : 0,
+              child: Slider(
+                value: height.toDouble(),
+                min: 30,
+                max: 340,
+                onChanged: (double newValue) {
+                  setState(() {
+                    height = newValue.round();
+                  });
+                },
+              ),
+            )
+          : RotatedBox(
+              quarterTurns: isLandscape ? 3 : 0,
+              child: Slider(
+                value: height.toDouble(),
+                min: 12.0,
+                max: 120.0,
+                onChanged: (double newValue) {
+                  setState(() {
+                    height = newValue.round();
+                  });
+                },
+              ),
+            ),
+    );
+
+    final items = [
+      const Text('HEIGHT', style: kTextStyleLabel),
+      selectedImperial == Imperial.cm
+          ? Row(
+              textBaseline: TextBaseline.alphabetic,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              children: [
+                Text(height.toString(), style: kTextStyleNumber),
+                Text(selectedImperial.value, style: kTextStyleLabel),
+              ],
+            )
+          : Row(
+              textBaseline: TextBaseline.alphabetic,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                  child: Text(
+                    (height / 12).floor().toString(),
+                    key: ValueKey<int>((height / 12).floor()),
+                    style: kTextStyleNumber,
+                  ),
                 ),
-              );
-            },
-          )
-        ],
-      ),
-      // endDrawer: const DrawerWidget(),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Add your widgets here for the left side of the landscape layout
+                const Text('ft', style: kTextStyleLabel),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                  child: Text(
+                    (height % 12).toString(),
+                    key: ValueKey<int>((height % 12).floor()),
+                    style: kTextStyleNumber,
+                  ),
+                ),
+                const Text('in', style: kTextStyleLabel),
               ],
             ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    ];
+
+    return ReusableCard(
+      color: kContainerColor,
+      cardChild: isLandscape
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Add your widgets here for the right side of the landscape layout
+                slider,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: items,
+                ),
+                SizedBox(width: 4.0),
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...items,
+                slider,
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
-  Widget weightColumn() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text('WEIGHT', style: kTextStyleLabel),
-        _isAnimationEnable
-            ? AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (child, animation) => ScaleTransition(
-                  scale: animation,
-                  child: child,
-                ),
-                child: RichText(
-                  key: ValueKey(weight),
-                  text: TextSpan(
-                    children: [
-                      TextSpan(text: weight.toString(), style: kTextStyleNumber),
-                      TextSpan(
-                        text: ' ${selectedMetric.value}',
-                        style: kTextStyleLabel.copyWith(fontSize: 10),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : RichText(
+  Widget _weightCard({bool isLandScape = false}) {
+    final items = [
+      const Text('WEIGHT', style: kTextStyleLabel),
+      _isAnimationEnable
+          ? AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                child: child,
+              ),
+              child: RichText(
+                key: ValueKey(weight),
                 text: TextSpan(
                   children: [
                     TextSpan(text: weight.toString(), style: kTextStyleNumber),
@@ -451,69 +491,127 @@ class _InputPageState extends State<InputPage> {
                   ],
                 ),
               ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleIconButton(
-              icon: FontAwesomeIcons.minus,
-              onPress: () => _updateUnit(true, false),
-              onLongPress: () => _startUpdatingUnit(true, false),
-              onLongPressEnd: _stopUpdatingUnit,
+            )
+          : RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: weight.toString(), style: kTextStyleNumber),
+                  TextSpan(
+                    text: ' ${selectedMetric.value}',
+                    style: kTextStyleLabel.copyWith(fontSize: 10),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(width: 8.0),
-            CircleIconButton(
-              icon: FontAwesomeIcons.plus,
-              onPress: () => _updateUnit(true, true),
-              onLongPress: () => _startUpdatingUnit(true, true),
-              onLongPressEnd: _stopUpdatingUnit,
-            ),
-          ],
-        )
+    ];
+
+    final buttons = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircleIconButton(
+          icon: FontAwesomeIcons.minus,
+          onPress: () => _updateUnit(true, false),
+          onLongPress: () => _startUpdatingUnit(true, false),
+          onLongPressEnd: _stopUpdatingUnit,
+        ),
+        const SizedBox(width: 8.0),
+        CircleIconButton(
+          icon: FontAwesomeIcons.plus,
+          onPress: () => _updateUnit(true, true),
+          onLongPress: () => _startUpdatingUnit(true, true),
+          onLongPressEnd: _stopUpdatingUnit,
+        ),
       ],
+    );
+
+    return ReusableCard(
+      color: kContainerColor,
+      cardChild: isLandScape
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ...items,
+                  ],
+                ),
+                buttons,
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...items,
+                buttons,
+              ],
+            ),
     );
   }
 
-  Widget ageColumn() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text('AGE', style: kTextStyleLabel),
-        _isAnimationEnable
-            ? AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (child, animation) => ScaleTransition(
-                  scale: animation,
-                  child: child,
-                ),
-                child: Text(
-                  key: ValueKey(age),
-                  age.toString(),
-                  style: kTextStyleNumber,
-                ),
-              )
-            : Text(
+  Widget _ageCard({bool isLandScape = false}) {
+    final items = [
+      const Text('AGE', style: kTextStyleLabel),
+      _isAnimationEnable
+          ? AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                child: child,
+              ),
+              child: Text(
+                key: ValueKey(age),
                 age.toString(),
                 style: kTextStyleNumber,
               ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleIconButton(
-              icon: FontAwesomeIcons.minus,
-              onPress: () => _updateUnit(false, false),
-              onLongPress: () => _startUpdatingUnit(false, false),
-              onLongPressEnd: _stopUpdatingUnit,
+            )
+          : Text(
+              age.toString(),
+              style: kTextStyleNumber,
             ),
-            const SizedBox(width: 8.0),
-            CircleIconButton(
-              icon: FontAwesomeIcons.plus,
-              onPress: () => _updateUnit(false, true),
-              onLongPress: () => _startUpdatingUnit(false, true),
-              onLongPressEnd: _stopUpdatingUnit,
-            ),
-          ],
-        )
+    ];
+
+    final buttons = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircleIconButton(
+          icon: FontAwesomeIcons.minus,
+          onPress: () => _updateUnit(false, false),
+          onLongPress: () => _startUpdatingUnit(false, false),
+          onLongPressEnd: _stopUpdatingUnit,
+        ),
+        const SizedBox(width: 8.0),
+        CircleIconButton(
+          icon: FontAwesomeIcons.plus,
+          onPress: () => _updateUnit(false, true),
+          onLongPress: () => _startUpdatingUnit(false, true),
+          onLongPressEnd: _stopUpdatingUnit,
+        ),
       ],
+    );
+
+    return ReusableCard(
+      color: kContainerColor,
+      cardChild: isLandScape
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: items,
+                ),
+                buttons,
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...items,
+                buttons,
+              ],
+            ),
     );
   }
 }
