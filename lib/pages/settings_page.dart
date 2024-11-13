@@ -60,156 +60,159 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           title: const Text('Settings'),
         ),
-        body: Column(
-          children: <Widget>[
-            ReusableCard(
-              color: kColorActiveCard,
-              cardChild: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text('Units', style: kTextStyleLabel),
-                    const Divider(
-                      color: kColorLightGrey,
-                      thickness: 0.25,
-                    ),
-                    const SizedBox(height: 8.0),
-                    UnitSelectionWidget<Imperial>(
-                      label: 'Imperial',
-                      icon: FontAwesomeIcons.rulerCombined,
-                      items: settingsController.getImperialUnits(),
-                      selectedItem: settingsController.selectedImperial,
-                      onTap: (val) {
-                        // print log
-                        debugPrint('Selected Imperial: $val');
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              ReusableCard(
+                color: kColorActiveCard,
+                cardChild: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text('Units', style: kTextStyleLabel),
+                      const Divider(
+                        color: kColorLightGrey,
+                        thickness: 0.25,
+                      ),
+                      const SizedBox(height: 8.0),
+                      UnitSelectionWidget<Imperial>(
+                        label: 'Imperial',
+                        icon: FontAwesomeIcons.rulerCombined,
+                        items: settingsController.getImperialUnits(),
+                        selectedItem: settingsController.selectedImperial,
+                        onTap: (val) {
+                          // print log
+                          debugPrint('Selected Imperial: $val');
 
-                        // update the selected unit
-                        setState(() {
-                          settingsController.selectedImperial = val;
-                        });
+                          // update the selected unit
+                          setState(() {
+                            settingsController.selectedImperial = val;
+                          });
 
-                        // show toast message
-                        settingsController.showToast('Unit changed to ${settingsController.getImperial()}');
+                          // show toast message
+                          settingsController.showToast('Unit changed to ${settingsController.getImperial()}');
 
-                        // store the selected unit in shared preferences
-                        Preference.setString(kKeyImperialValue, settingsController.selectedImperial.toString());
+                          // store the selected unit in shared preferences
+                          Preference.setString(kKeyImperialValue, settingsController.selectedImperial.toString());
 
-                        // update change flag
-                        isUnitChanged = true;
-                      },
-                    ),
-                    const SizedBox(height: 8.0),
-                    UnitSelectionWidget<Metric>(
-                      label: 'Metric',
-                      icon: FontAwesomeIcons.weightScale,
-                      items: settingsController.getMetricUnits(),
-                      selectedItem: settingsController.selectedMetric,
-                      onTap: (val) {
-                        // print log
-                        debugPrint('Selected Metric: $val');
+                          // update change flag
+                          isUnitChanged = true;
+                        },
+                      ),
+                      const SizedBox(height: 8.0),
+                      UnitSelectionWidget<Metric>(
+                        label: 'Metric',
+                        icon: FontAwesomeIcons.weightScale,
+                        items: settingsController.getMetricUnits(),
+                        selectedItem: settingsController.selectedMetric,
+                        onTap: (val) {
+                          // print log
+                          debugPrint('Selected Metric: $val');
 
-                        // update the selected unit
-                        setState(() {
-                          settingsController.selectedMetric = val;
-                        });
+                          // update the selected unit
+                          setState(() {
+                            settingsController.selectedMetric = val;
+                          });
 
-                        // show toast message
-                        settingsController.showToast('Unit changed to ${settingsController.getMetric()}');
+                          // show toast message
+                          settingsController.showToast('Unit changed to ${settingsController.getMetric()}');
 
-                        // store the selected unit in shared preferences
-                        Preference.setString(kKeyMetricValue, settingsController.selectedMetric.toString());
+                          // store the selected unit in shared preferences
+                          Preference.setString(kKeyMetricValue, settingsController.selectedMetric.toString());
 
-                        // update change flag
-                        isUnitChanged = true;
-                      },
-                    )
-                  ],
+                          // update change flag
+                          isUnitChanged = true;
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            ReusableCard(
-              color: kColorActiveCard,
-              cardChild: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text('Others', style: kTextStyleLabel),
-                    const Divider(
-                      color: kColorLightGrey,
-                      thickness: 0.25,
-                    ),
-                    const SizedBox(height: 8.0),
-                    settingItem(
-                      'Share App',
-                      FontAwesomeIcons.share,
-                      onTap: settingsController.shareApp,
-                    ),
-                    settingItem(
-                      'Give Review',
-                      Icons.rate_review_rounded,
-                      onTap: settingsController.rateApp,
-                    ),
-                    settingItem(
-                      'Report Bug',
-                      Icons.bug_report,
-                      onTap: () => settingsController.reportBug(context),
-                    ),
-                    settingItem(
-                      'About Us',
-                      FontAwesomeIcons.circleInfo,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AboutPage(),
-                          ),
-                        );
-                      },
-                    ),
-                    settingItem(
-                      'Privacy Policy',
-                      FontAwesomeIcons.shieldHalved,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TermsConditions(
-                              url: 'bmi.solobit.dev/privacy_policy.html',
-                              title: 'Privacy Policy',
+              ReusableCard(
+                color: kColorActiveCard,
+                cardChild: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text('Others', style: kTextStyleLabel),
+                      const Divider(
+                        color: kColorLightGrey,
+                        thickness: 0.25,
+                      ),
+                      const SizedBox(height: 8.0),
+                      settingItem(
+                        'Share App',
+                        FontAwesomeIcons.share,
+                        onTap: settingsController.shareApp,
+                      ),
+                      settingItem(
+                        'Give Review',
+                        Icons.rate_review_rounded,
+                        onTap: settingsController.rateApp,
+                      ),
+                      settingItem(
+                        'Report Bug',
+                        Icons.bug_report,
+                        onTap: () => settingsController.reportBug(context),
+                      ),
+                      settingItem(
+                        'About Us',
+                        FontAwesomeIcons.circleInfo,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AboutPage(),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    settingItem(
-                      'Terms & Conditions',
-                      FontAwesomeIcons.book,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TermsConditions(
-                              url: 'bmi.solobit.dev/terms_and_condition.html',
-                              title: 'Terms & Conditions',
+                          );
+                        },
+                      ),
+                      settingItem(
+                        'Privacy Policy',
+                        FontAwesomeIcons.shieldHalved,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TermsConditions(
+                                url: 'bmi.solobit.dev/privacy_policy.html',
+                                title: 'Privacy Policy',
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                          );
+                        },
+                      ),
+                      settingItem(
+                        'Terms & Conditions',
+                        FontAwesomeIcons.book,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TermsConditions(
+                                url: 'bmi.solobit.dev/terms_and_condition.html',
+                                title: 'Terms & Conditions',
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Text(
-              'Version 1.0.0',
-              style: TextStyle(
-                color: kColorLightGrey,
-                fontSize: 12.0,
+              const Text(
+                'Version 1.0.0',
+                style: TextStyle(
+                  color: kColorLightGrey,
+                  fontSize: 12.0,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 12.0),
+            ],
+          ),
         ),
       ),
     );
