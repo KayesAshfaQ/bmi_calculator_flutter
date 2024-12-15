@@ -21,7 +21,35 @@ class ResultPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Your Result'),
       ),
-      body: Column(
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth > 600) {
+            return _buildLandscapeLayout(context);
+          } else {
+            return _buildPortraitLayout(context);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildLandscapeLayout(BuildContext context) => SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            resultCard(),
+            BottomButtonWidget(
+              label: 'RE-CALCULATE',
+              prefixIcon: FontAwesomeIcons.arrowRotateRight,
+              onTap: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+      );
+
+  Widget _buildPortraitLayout(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
@@ -38,12 +66,11 @@ class ResultPage extends StatelessWidget {
             ),
           )
         ],
-      ),
-    );
-  }
+      );
 
   Widget resultCard() {
     return ReusableCard(
+      padding: EdgeInsets.all(8),
       color: kColorActiveCard,
       cardChild: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
