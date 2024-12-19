@@ -71,7 +71,7 @@ class ResultPage extends StatelessWidget {
   Widget resultCard() {
     return ReusableCard(
       padding: EdgeInsets.all(8),
-      color: kColorActiveCard,
+      color: kContainerColor,
       cardChild: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

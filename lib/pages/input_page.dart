@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bmi_calculator/utils/app_extensions.dart';
 
@@ -342,7 +341,7 @@ class _InputPageState extends State<InputPage> {
 
       return ReusableCard(
         cardChild: IconWidget(icon: icon, label: gender.value.toUpperCase()),
-        color: isSelected ? kColorActiveCard : kColorInActiveCard,
+        color: kContainerColor,
         border: isSelected ? Border.all(color: kColorBottomContainer, width: 2.0) : null,
         onPress: () {
           setState(() {

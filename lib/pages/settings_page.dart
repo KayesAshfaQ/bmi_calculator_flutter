@@ -64,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Column(
             children: <Widget>[
               ReusableCard(
-                color: kColorActiveCard,
+                color: kContainerColor,
                 cardChild: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -130,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               ReusableCard(
-                color: kColorActiveCard,
+                color: kContainerColor,
                 cardChild: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(

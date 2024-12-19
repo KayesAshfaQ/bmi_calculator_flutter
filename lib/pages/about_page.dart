@@ -14,7 +14,7 @@ class AboutPage extends StatelessWidget {
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-          color: kColorInActiveCard,
+          color: kContainerColor,
         ),
         child: const SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
