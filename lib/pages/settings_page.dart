@@ -7,6 +7,7 @@ import '../constants.dart';
 import '../components/reusable_card.dart';
 import '../components/unit_selection_widget.dart';
 import '../controllers/settings_controller.dart';
+import '../utils/app_package_info_helper.dart';
 import 'about_page.dart';
 import 'terms_conditions.dart';
 
@@ -30,11 +31,21 @@ class _SettingsPageState extends State<SettingsPage> {
   late SettingsController settingsController;
 
   bool isUnitChanged = false;
+  String appVersion = '0.0.0';
 
   @override
   void initState() {
     super.initState();
     settingsController = SettingsController();
+
+    // retrieve the app version from package info
+    if (AppPackageInfoHelper().version != null) {
+      appVersion = AppPackageInfoHelper().version!;
+    } else {
+      AppPackageInfoHelper().initialize().then((_) {
+        appVersion = AppPackageInfoHelper().version!;
+      });
+    }
 
     // set the selected imperial and metric units
     // add post frame callback to avoid setState() during build
@@ -203,8 +214,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              const Text(
-                'Version 1.0.0',
+              Text(
+                'Version $appVersion',
                 style: TextStyle(
                   color: kColorLightGrey,
                   fontSize: 12.0,

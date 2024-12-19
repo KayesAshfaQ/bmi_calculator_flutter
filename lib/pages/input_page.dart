@@ -65,7 +65,7 @@ class _InputPageState extends State<InputPage> {
     await packageInfo.initialize();
 
     // get current app version
-    final appVersion = _getExtendedVersionNumber(packageInfo.version);
+    final appVersion = _getExtendedVersionNumber(packageInfo.version ?? '0.0.0');
 
     // get required minimum version from remote config
     final minRequiredVersion = _getExtendedVersionNumber(remoteConfig.getRequiredMinimumVersion());
