@@ -78,10 +78,7 @@ class SettingsController {
           final Uri emailLaunchUri = Uri(
             scheme: 'mailto',
             path: 'dev.solobit@gmail.com',
-            queryParameters: {
-              'subject': titleController.text,
-              'body': detailsController.text,
-            },
+            query: 'subject=${Uri.encodeComponent(titleController.text)}&body=${Uri.encodeComponent(detailsController.text)}',
           );
           launchUrl(emailLaunchUri);
         }
