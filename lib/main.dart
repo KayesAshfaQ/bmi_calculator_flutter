@@ -74,6 +74,9 @@ class BMICalculator extends StatelessWidget {
           borderSide: BorderSide(color: kColorBottomContainer),
         ),
       ),
+      dialogTheme: const DialogTheme(
+        backgroundColor: kContainerColor,
+      ),
     );
   }
 }

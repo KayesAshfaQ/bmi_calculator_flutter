@@ -361,7 +361,7 @@ class _InputPageState extends State<InputPage> {
         activeTrackColor: Colors.white,
         inactiveTrackColor: kColorLightGrey,
         thumbColor: kColorBottomContainer,
-        overlayColor: const Color(0x29FF0067),
+        overlayColor: kColorBottomContainer.withOpacity(0.2),
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
         overlayShape: const RoundSliderOverlayShape(overlayRadius: 24.0),
         trackShape: const RectangularSliderTrackShape(),
