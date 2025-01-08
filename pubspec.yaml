@@ -3,37 +3,37 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 1.1.8+18
+version: 1.2.0+20
 
 environment:
   sdk: ">=3.3.1 <4.0.0"
 
 dependencies:
   cupertino_icons: ^1.0.8 # Cupertino icons
-  firebase_core: ^3.6.0 # Firebase core
-  firebase_crashlytics: ^4.1.3 # Firebase crash reporting
-  firebase_remote_config: ^5.1.3 # Firebase remote config
+  firebase_core: ^3.9.0 # Firebase core
+  firebase_crashlytics: ^4.2.0 # Firebase crash reporting
+  firebase_remote_config: ^5.2.0 # Firebase remote config
   flutter:
     sdk: flutter # Flutter SDK
-  fluttertoast: ^8.2.8 # Shows toast messages
-  font_awesome_flutter: ^10.7.0 # Font Awesome icons
-  in_app_review: ^2.0.9 # In-app review
-  package_info_plus: ^8.0.2 # App information
+  fluttertoast: ^8.2.10 # Shows toast messages
+  font_awesome_flutter: ^10.8.0 # Font Awesome icons
+  in_app_review: ^2.0.10 # In-app review
+  package_info_plus: ^8.1.2 # App information
   provider: ^6.1.2 # State management
-  share_plus: ^10.0.2 # Share content
-  shared_preferences: ^2.3.2 # Cache local data
-  url_launcher: ^6.3.0 # Launch URLs
-  webview_flutter: ^4.9.0 # In-app web view
+  share_plus: ^10.1.3 # Share content
+  shared_preferences: ^2.3.4 # Cache local data
+  url_launcher: ^6.3.1 # Launch URLs
+  webview_flutter: ^4.10.0 # In-app web view
 
 dev_dependencies:
-  change_app_package_name: ^1.3.0 # Change application ID
+  change_app_package_name: ^1.4.0 # Change application ID
   flutter_lints: ^5.0.0 # Linting rules
-  flutter_native_splash: ^2.4.1 # Splash screen
+  flutter_native_splash: ^2.4.3 # Splash screen
   flutter_test:
     sdk: flutter # Flutter testing framework
 
 flutter_native_splash:
-  color: "#090C22"
+  color: "#000000"
   image: "assets/bmi.png"
 
 flutter:
