@@ -14,7 +14,7 @@ class IconWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(icon, size: 80.0),
-        Text(label, style: kLabelTextStyle),
+        Text(label, style: kTextStyleLabel),
       ],
     );
   }

@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../constants.dart';
+
 class TermsConditions extends StatefulWidget {
-  const TermsConditions({Key? key}) : super(key: key);
+  final String title;
+  final String url;
+
+  const TermsConditions({
+    super.key,
+    required this.title,
+    required this.url,
+  });
 
   @override
   State<TermsConditions> createState() => _TermsConditionsState();
 }
 
 class _TermsConditionsState extends State<TermsConditions> {
+  late WebViewController _controller;
+  int _progress = 0;
+
   @override
-  Widget build(BuildContext context) {
-    WebViewPlatform.instance;
-    final controller = WebViewController()
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            // Update loading bar.
+            // Delay the progress bar to show the loading animation.
+            Future.delayed(const Duration(milliseconds: 500), () {
+              // Update loading bar.
+              setState(() {
+                _progress = progress;
+              });
+            });
           },
           onPageStarted: (String url) {},
           onPageFinished: (String url) {},
@@ -31,11 +49,28 @@ class _TermsConditionsState extends State<TermsConditions> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://flutter.dev'));
+      ..loadRequest(Uri.parse('https://${widget.url}'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    WebViewPlatform.instance;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Flutter Simple Example')),
-      body: WebViewWidget(controller: controller),
+      appBar: AppBar(title: Text(widget.title)),
+      body: SafeArea(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: _progress < 100
+              ? LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(kColorBottomContainer),
+                  value: _progress / 100.0,
+                )
+              : WebViewWidget(controller: _controller),
+        ),
+      ),
     );
   }
 }

@@ -4,21 +4,31 @@ class ReusableCard extends StatelessWidget {
   final Color? color;
   final Widget? cardChild;
   final VoidCallback? onPress;
+  final BoxBorder? border;
+  final EdgeInsetsGeometry? padding;
 
-  const ReusableCard(
-      {super.key, @required this.color, this.cardChild, this.onPress});
+  const ReusableCard({
+    super.key,
+    @required this.color,
+    this.cardChild,
+    this.onPress,
+    this.border,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPress,
       child: Container(
-        child: cardChild,
         margin: const EdgeInsets.all(12.0),
+        padding: padding,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
           color: color,
+          borderRadius: BorderRadius.circular(10.0),
+          border: border,
         ),
+        child: cardChild,
       ),
     );
   }
