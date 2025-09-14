@@ -59,7 +59,7 @@ class BMICalculator extends StatelessWidget {
       scaffoldBackgroundColor: kColorPrimary,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: kColorBottomContainer,
-        selectionColor: kColorBottomContainer.withOpacity(0.25),
+        selectionColor: kColorBottomContainer.withValues(alpha: 0.25),
         selectionHandleColor: kColorBottomContainer,
       ),
       inputDecorationTheme: const InputDecorationTheme(
@@ -74,7 +74,7 @@ class BMICalculator extends StatelessWidget {
           borderSide: BorderSide(color: kColorBottomContainer),
         ),
       ),
-      dialogTheme: const DialogTheme(
+      dialogTheme: const DialogThemeData(
         backgroundColor: kContainerColor,
       ),
     );

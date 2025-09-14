@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1097657830790',
     projectId: 'solobit-bmi-calculator',
     authDomain: 'solobit-bmi-calculator.firebaseapp.com',
-    storageBucket: 'solobit-bmi-calculator.appspot.com',
+    storageBucket: 'solobit-bmi-calculator.firebasestorage.app',
     measurementId: 'G-SSV8LVLJFQ',
   );
 
@@ -61,7 +61,7 @@ class DefaultFirebaseOptions {
     appId: '1:1097657830790:android:66b7b75ccb924d2c80f007',
     messagingSenderId: '1097657830790',
     projectId: 'solobit-bmi-calculator',
-    storageBucket: 'solobit-bmi-calculator.appspot.com',
+    storageBucket: 'solobit-bmi-calculator.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -69,7 +69,8 @@ class DefaultFirebaseOptions {
     appId: '1:1097657830790:ios:feeda4885b78e59580f007',
     messagingSenderId: '1097657830790',
     projectId: 'solobit-bmi-calculator',
-    storageBucket: 'solobit-bmi-calculator.appspot.com',
+    storageBucket: 'solobit-bmi-calculator.firebasestorage.app',
     iosBundleId: 'com.solobit.bmiCalculator',
   );
+
 }
