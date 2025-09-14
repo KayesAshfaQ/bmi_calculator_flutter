@@ -21,14 +21,16 @@ class ResultPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Your Result'),
       ),
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth > 600) {
-            return _buildLandscapeLayout(context);
-          } else {
-            return _buildPortraitLayout(context);
-          }
-        },
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth > 600) {
+              return _buildLandscapeLayout(context);
+            } else {
+              return _buildPortraitLayout(context);
+            }
+          },
+        ),
       ),
     );
   }

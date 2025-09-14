@@ -65,13 +65,16 @@ class _InputPageState extends State<InputPage> {
     await packageInfo.initialize();
 
     // get current app version
-    final appVersion = _getExtendedVersionNumber(packageInfo.version ?? '0.0.0');
+    final appVersion =
+        _getExtendedVersionNumber(packageInfo.version ?? '0.0.0');
 
     // get required minimum version from remote config
-    final minRequiredVersion = _getExtendedVersionNumber(remoteConfig.getRequiredMinimumVersion());
+    final minRequiredVersion =
+        _getExtendedVersionNumber(remoteConfig.getRequiredMinimumVersion());
 
     // get recommended minimum version from remote config
-    final minRecommendedVersion = _getExtendedVersionNumber(remoteConfig.getRecommendedMinimumVersion());
+    final minRecommendedVersion =
+        _getExtendedVersionNumber(remoteConfig.getRecommendedMinimumVersion());
 
     if (appVersion < minRequiredVersion) {
       AppDialogues().showUpdateVersionDialog(context, false);
@@ -84,8 +87,10 @@ class _InputPageState extends State<InputPage> {
 
     // print log
     debugPrint('App Version: $appVersion');
-    debugPrint('Min Required Version: ${remoteConfig.getRequiredMinimumVersion()}');
-    debugPrint('Min Recommended Version: ${remoteConfig.getRequiredMinimumVersion()}');
+    debugPrint(
+        'Min Required Version: ${remoteConfig.getRequiredMinimumVersion()}');
+    debugPrint(
+        'Min Recommended Version: ${remoteConfig.getRequiredMinimumVersion()}');
   }
 
   void _updateUnit(bool isWeight, bool isIncrement) {
@@ -149,8 +154,14 @@ class _InputPageState extends State<InputPage> {
 
   void _fetchCachedData() {
     // get imperial and metric values from shared preferences
-    selectedImperial = Imperial.values.firstWhere((element) => element.toString() == Preference.getString(kKeyImperialValue), orElse: () => Imperial.ft);
-    selectedMetric = Metric.values.firstWhere((element) => element.toString() == Preference.getString(kKeyMetricValue), orElse: () => Metric.kg);
+    selectedImperial = Imperial.values.firstWhere(
+        (element) =>
+            element.toString() == Preference.getString(kKeyImperialValue),
+        orElse: () => Imperial.ft);
+    selectedMetric = Metric.values.firstWhere(
+        (element) =>
+            element.toString() == Preference.getString(kKeyMetricValue),
+        orElse: () => Metric.kg);
 
     // print log
     debugPrint('Imperial: $selectedImperial');
@@ -195,49 +206,51 @@ class _InputPageState extends State<InputPage> {
           )
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _genderCard(
-                    gender: Gender.MALE,
-                    icon: Icons.male,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _genderCard(
+                      gender: Gender.MALE,
+                      icon: Icons.male,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: _genderCard(
-                    gender: Gender.FEMALE,
-                    icon: Icons.female,
+                  Expanded(
+                    child: _genderCard(
+                      gender: Gender.FEMALE,
+                      icon: Icons.female,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: _heightCard(),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _weightCard(),
-                ),
-                Expanded(
-                  child: _ageCard(),
-                ),
-              ],
+            Expanded(
+              child: _heightCard(),
             ),
-          ),
-          _calculateButton()
-        ],
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _weightCard(),
+                  ),
+                  Expanded(
+                    child: _ageCard(),
+                  ),
+                ],
+              ),
+            ),
+            _calculateButton()
+          ],
+        ),
       ),
     );
   }
 
-  Widget _calculateButton({bool isLandscape = false}) {
+  Widget _calculateButton() {
     return BottomButtonWidget(
       label: 'CALCULATE',
       suffixIcon: FontAwesomeIcons.arrowRight,
@@ -300,7 +313,8 @@ class _InputPageState extends State<InputPage> {
                     child: _genderCard(gender: Gender.MALE, icon: Icons.male),
                   ),
                   Expanded(
-                    child: _genderCard(gender: Gender.FEMALE, icon: Icons.female),
+                    child:
+                        _genderCard(gender: Gender.FEMALE, icon: Icons.female),
                   ),
                 ],
               ),
@@ -342,7 +356,9 @@ class _InputPageState extends State<InputPage> {
       return ReusableCard(
         cardChild: IconWidget(icon: icon, label: gender.value.toUpperCase()),
         color: kContainerColor,
-        border: isSelected ? Border.all(color: kColorBottomContainer, width: 2.0) : null,
+        border: isSelected
+            ? Border.all(color: kColorBottomContainer, width: 2.0)
+            : null,
         onPress: () {
           setState(() {
             selectedGender = gender;

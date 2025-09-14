@@ -58,15 +58,18 @@ class _TermsConditionsState extends State<TermsConditions> {
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
-        child: _progress < 100
-            ? LinearProgressIndicator(
-                backgroundColor: Colors.transparent,
-                valueColor: AlwaysStoppedAnimation<Color>(kColorBottomContainer),
-                value: _progress / 100.0,
-              )
-            : WebViewWidget(controller: _controller),
+      body: SafeArea(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: _progress < 100
+              ? LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(kColorBottomContainer),
+                  value: _progress / 100.0,
+                )
+              : WebViewWidget(controller: _controller),
+        ),
       ),
     );
   }
